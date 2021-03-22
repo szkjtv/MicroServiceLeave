@@ -26,30 +26,19 @@ func DbInit() (db *gorm.DB) {
 		panic(err.Error())
 	}
 
-	CreDb()
+	// CreDb()
 	return DB
 
 }
 
-// 自动仓库数据库
-func CreDb() {
-
-	DB.AutoMigrate(&Address{})
-
-}
-
-// 增加数据内容
-func add(c *gin.Context) {
-
+func Delete(c *gin.Context) {
 	db := DbInit()
-	name := c.PostForm("name")
-	number := c.PostForm("number")
-	address := c.PostForm("address")
-	newAdd := Address{Name: name, Number: number, Address: address}
-	db.Create(&newAdd)
-	c.JSON(200, "播入成功")
+	id := c.Param("id")
+	var delete Address
+	db.Where(id).Delete(&delete)
 	defer db.Close()
-
+	c.JSON(200, "删除成功")
+	// c.Redirect(http.StatusMovedPermanently, "/user/auth/address")
 }
 
 // 访问路由
@@ -59,9 +48,10 @@ func Router() {
 	// r.LoadHTMLGlob("view/**/*")
 	// r.Static("/static", "./static")
 
-	r.POST("/add", add)
+	// r.POST("/add", add)
+	r.GET("/delete/:id", Delete)
 
-	r.Run(":85")
+	r.Run(":86")
 }
 
 func main() {
