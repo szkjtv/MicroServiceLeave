@@ -31,6 +31,7 @@ func DbInit() (db *gorm.DB) {
 
 }
 
+//删除函数
 func Delete(c *gin.Context) {
 	db := DbInit()
 	id := c.Param("id")
