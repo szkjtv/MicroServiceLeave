@@ -31,7 +31,7 @@ func DbInit() (db *gorm.DB) {
 
 }
 
-// 自动仓库数据库
+// 自动创建数据库
 func CreDb() {
 
 	DB.AutoMigrate(&Address{})
@@ -52,6 +52,30 @@ func add(c *gin.Context) {
 
 }
 
+//显示要修改的内容
+func ShowEditor(c *gin.Context) {
+	db := DbInit()
+	var showEditor Address
+	id := c.Param("id")
+
+	db.Find(&showEditor, id)
+	c.JSON(200, showEditor) //这里显示所有内容showEditor，不要仅显示id
+
+	// c.HTML(http.StatusOK, "editor.html", showEditor)
+}
+
+//修改内容
+func modify(c *gin.Context) {
+	db := DbInit()
+	id := c.Param("id")
+	name := c.PostForm("name")
+	number := c.PostForm("number")
+	address := c.PostForm("address")
+
+	db.Model(&Address{}).Where(id).Update(&Address{Name: name, Number: number, Address: address})
+	// c.Redirect(http.StatusMovedPermanently, "/admin")
+}
+
 // 访问路由
 func Router() {
 
@@ -60,6 +84,8 @@ func Router() {
 	// r.Static("/static", "./static")
 
 	r.POST("/add", add)
+	r.GET("/ShowEditor/:id", ShowEditor) //先查询出来要修改的内容 http://127.0.0.1:85/ShowEditor/4 可行
+	r.POST("/modify/:id", modify)        //http://127.0.0.1:85/modify/4  成功修改了
 
 	r.Run(":85")
 }

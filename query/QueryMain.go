@@ -62,14 +62,14 @@ func QueryOne(c *gin.Context) {
 func Router() {
 
 	r := gin.Default()
-	r.LoadHTMLGlob("view/**/*")
+	// r.LoadHTMLGlob("view/**/*")
 	// r.LoadHTMLFiles("veiw/showaddress.html")
-	r.Static("/static", "./static")
+	// r.Static("/static", "./static")
 
 	r.GET("/Showadd", Showaddhtml)
-	r.GET("/ShowQuery", ShowQuery)
+	r.GET("/ShowQuery", ShowQuery) //查询所有数据方法成功可靠
 	// http://127.0.0.1:88/QueryOne/id=15  查询单条数据接口方式
-	r.GET("/QueryOne/:id", QueryOne)
+	r.GET("/QueryOne/:id", QueryOne) //查询单一数据方法成功可行
 
 	r.Run(":88")
 }
